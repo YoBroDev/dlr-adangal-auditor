@@ -6,8 +6,11 @@
     <title>DLR & Adangal Unified Auditor, Converter & Analyzer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Google AdSense Script Placeholder -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script> -->
+    
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3010390488238798"
+         crossorigin="anonymous"></script>
+
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -204,19 +207,27 @@
             width: 100%;
             text-align: center;
             margin: 15px 0;
-            background-color: #e2e8f0;
+            background-color: #ffffff;
             border: 1px dashed #cbd5e1;
             padding: 10px 0;
             border-radius: 6px;
+            min-height: 90px;
         }
     </style>
 </head>
 <body>
 
-    <!-- TOP AD BANNER PLACEHOLDER -->
+    <!-- TOP AD BANNER CONTAINER -->
     <div class="ad-container">
-        <!-- Replace this comment with your AdSense Ad Unit Code -->
-        <span style="color: #64748b; font-size: 12px;">Advertisement Banner</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3010390488238798"
+             data-ad-slot="auto"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <h1 style="color: #0f172a;">DLR & Adangal Unified Auditor, Converter & Analyzer</h1>
@@ -225,7 +236,7 @@
     <div class="converter-card">
         <h3 style="color: #4338ca; margin-bottom: 6px;">🛠️ Raw Adangal Two-Row Format Transformer</h3>
         <p style="font-size: 13px; color: #475569; margin-top: 0; margin-bottom: 12px;">
-            Upload your portal export (2-row format with alternating Aadhaar/Parent rows) to transform it into the single-row consolidated format. You can download the processed Excel file to manually upload below, or load it directly into Section 2 with one click.
+            Upload your portal export (2-row format with alternating details) to transform it into the single-row consolidated format. You can download the processed Excel file or load it directly into Section 2 with one click.
         </p>
         <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 280px;">
@@ -266,10 +277,17 @@
         </div>
     </div>
 
-    <!-- MID-PAGE AD PLACEHOLDER -->
+    <!-- MID-PAGE AD CONTAINER -->
     <div class="ad-container">
-        <!-- Replace this comment with your AdSense Responsive Ad Unit -->
-        <span style="color: #64748b; font-size: 12px;">Advertisement Banner</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3010390488238798"
+             data-ad-slot="auto"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <div id="outputArea" style="display: none;">
@@ -485,10 +503,17 @@
         </div>
     </div>
 
-    <!-- FOOTER AD PLACEHOLDER -->
+    <!-- FOOTER AD CONTAINER -->
     <div class="ad-container">
-        <!-- Replace this comment with your AdSense Footer Ad Unit -->
-        <span style="color: #64748b; font-size: 12px;">Advertisement Banner</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3010390488238798"
+             data-ad-slot="auto"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <script>
@@ -631,10 +656,8 @@
 
                 if (rowPrimary.length === 0 && rowSecondary.length === 0) continue;
 
-                // 1. Clean Serial Number
                 rowPrimary[0] = currentRecordIndex++;
 
-                // 2. Forward fill survey number
                 let curSurvey = (rowPrimary[1] !== undefined && rowPrimary[1] !== null) ? rowPrimary[1].toString().trim() : '';
                 if (curSurvey && curSurvey !== "None") {
                     lastSurveyNumber = curSurvey;
@@ -642,7 +665,6 @@
                     rowPrimary[1] = lastSurveyNumber;
                 }
 
-                // 3. Khata Number clean integer conversion
                 if (rowPrimary[10] !== undefined && rowPrimary[10] !== null && rowPrimary[10].toString().trim() !== '') {
                     let kParsed = parseFloat(rowPrimary[10].toString().replace(/[^0-9.]/g, ''));
                     if (!isNaN(kParsed)) {
@@ -650,7 +672,6 @@
                     }
                 }
 
-                // 4. Father/Spouse name from secondary row's Pattadar column into Enjoyer Name column (index 12)
                 let fatherSpouseName = (rowSecondary[11] !== undefined && rowSecondary[11] !== null) ? rowSecondary[11].toString().trim() : '';
                 if (fatherSpouseName) {
                     rowPrimary[12] = fatherSpouseName;
@@ -677,7 +698,6 @@
 
             executeMasterUnifiedAudit();
 
-            // Notify user
             alert(`Transformed dataset (${transformedAdangalRows.length} records) successfully loaded into Section 2! All cross-register audits (Khata variance, Delta audits) are now live.`);
         }
 
@@ -850,7 +870,6 @@
             def_adangal_survey_khata_map = {};
             tab1SelectedKeys.clear();
 
-            // Processing DLR
             globalDataRows.forEach(row => {
                 let lpmNo = (row[1] !== undefined && row[1] !== null) ? row[1].toString().trim() : 'Unknown';
                 let lpmExtent = parseFloatSafe(row[2]);
@@ -937,7 +956,6 @@
                 }
             });
 
-            // Processing Adangal
             if (isAdangalLoaded) {
                 adangalDataRows.forEach(row => {
                     let kNo = "";
@@ -972,7 +990,6 @@
                 });
             }
 
-            // Render Output Tables
             tab1ItemsCache = Object.values(comboMap);
             renderCombinationsTable();
 
