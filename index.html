@@ -7,236 +7,181 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    <!-- Google AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3010390488238798"
-         crossorigin="anonymous"></script>
+    <!-- Google AdSense Tag (Replace with your Publisher ID) -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script> -->
 
     <style>
+        :root {
+            color-scheme: light;
+            --ink: #172b3a;
+            --muted: #667887;
+            --line: #dce5e9;
+            --paper: #ffffff;
+            --canvas: #f2f6f5;
+            --navy: #17384a;
+            --teal: #167c78;
+            --teal-dark: #106661;
+            --gold: #b88a45;
+            --shadow: 0 12px 32px rgba(23, 56, 74, .07), 0 2px 6px rgba(23, 56, 74, .035);
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f6f9;
-            color: #333;
+            margin: 0; padding: 20px clamp(14px, 3.2vw, 48px) 30px;
+            color: var(--ink); background: var(--canvas);
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 14px; line-height: 1.55;
         }
-        h1, h2, h3 { color: #1e293b; margin-top: 0; }
+
+        /* Top License Bar */
+        .pro-top-bar {
+            max-width: 1440px; margin: 0 auto 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 10px 18px; box-shadow: var(--shadow);
+        }
+        .pro-status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-weight: 700; font-size: 12px;
+        }
+
+        body > h1 {
+            max-width: 1440px; margin: 0 auto 20px !important; padding: 22px 28px;
+            border: 1px solid rgba(255,255,255,.12); border-radius: 16px;
+            color: #fff !important; background: linear-gradient(115deg, #17384a 0%, #205b62 68%, #287a72 100%);
+            box-shadow: 0 14px 30px rgba(23,56,74,.14);
+            font-size: clamp(20px, 2.3vw, 29px); font-weight: 700; letter-spacing: -.03em;
+        }
+        h2 { margin: 0 0 15px; font-size: 18px; font-weight: 700; }
+        h3 { margin: 0 0 10px; font-size: 15px; font-weight: 700; }
+
+        .card, .converter-card, .delta-card {
+            background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+            box-shadow: var(--shadow); padding: 22px; margin-bottom: 20px;
+        }
+        .converter-card { border-left: 4px solid var(--teal); }
         .grid-container {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: separate;
-            border-spacing: 15px 0;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 18px; max-width: 1440px; margin: 0 auto 20px;
         }
-        .grid-col {
-            display: table-cell;
-            width: 50%;
-            vertical-align: top;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-        }
-        .converter-card {
-            background: #ffffff;
-            border-left: 5px solid #6366f1;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-        }
-        .input-group {
-            margin-bottom: 10px;
-        }
-        label { font-weight: 600; display: block; margin-bottom: 6px; color: #475569; }
+        .grid-col { min-width: 0; }
+        label { margin-bottom: 8px; color: #334d5c; font-size: 13px; font-weight: 650; display: block; }
         input[type="file"] {
-            padding: 12px;
-            border: 2px dashed #cbd5e1;
-            border-radius: 6px;
-            width: 100%;
-            box-sizing: border-box;
-            cursor: pointer;
-            background: #f8fafc;
+            display: block; width: 100%; padding: 11px 13px;
+            color: #526876; background: #f8fbfa; border: 1px dashed #aebfc5;
+            border-radius: 9px; cursor: pointer; transition: .18s ease;
         }
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 5px;
-        }
+        input[type="file"]:hover { border-color: var(--teal); background: #f1f8f6; }
+
+        .tabs { display: flex; flex-wrap: wrap; gap: 7px; margin: 8px 0 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
         .tab-btn {
-            padding: 10px 14px;
-            border: none;
-            background: #e2e8f0;
-            cursor: pointer;
-            border-radius: 6px 6px 0 0;
-            font-weight: bold;
-            color: #475569;
-            transition: 0.15s ease-in-out;
+            padding: 9px 13px; border: 1px solid transparent; border-radius: 8px;
+            color: #536977; background: transparent; cursor: pointer; font-weight: 650;
+            transition: .18s ease;
         }
-        .tab-btn.active {
-            background: #2563eb;
-            color: white;
-        }
+        .tab-btn:hover { color: var(--teal-dark); background: #eaf4f2; }
+        .tab-btn.active { color: #fff !important; background: var(--navy) !important; box-shadow: 0 4px 10px rgba(23,56,74,.15); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .table-container {
-            overflow-x: auto;
-            max-height: 480px;
-            overflow-y: auto;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 13px;
-        }
-        th {
-            background-color: #f1f5f9;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            padding: 12px;
-            font-weight: 600;
-            border-bottom: 2px solid #cbd5e1;
-            color: #1e293b;
-            user-select: none;
-        }
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .clickable-row { cursor: pointer; }
-        .clickable-row:hover { background-color: #f0fdf4 !important; }
-        .clickable-row.selected-row {
-            background-color: #dbeafe !important;
-            border-left: 4px solid #2563eb;
-        }
-        tr:hover { background-color: #f8fafc; }
-        .loading { color: #2563eb; font-weight: bold; display: none; margin-top: 8px; }
-        .btn {
-            background-color: #10b981;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-        .btn:hover { background-color: #059669; }
-        .btn-alt {
-            background-color: #3b82f6;
-        }
-        .btn-alt:hover { background-color: #1d4ed8; }
-        .btn-purple {
-            background-color: #6366f1;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-right: 8px;
-            margin-bottom: 10px;
-        }
-        .btn-purple:hover { background-color: #4f46e5; }
-        .info-box {
-            background-color: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            border-radius: 0 4px 4px 0;
-        }
-        .delta-card {
-            background: #fff;
-            border-top: 4px solid #ef4444;
-            padding: 15px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 15px;
-        }
-        .delta-extra { border-top-color: #3b82f6; }
-        .badge-count {
-            float: right;
-            background: #f1f5f9;
-            color: #334155;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .match { color: #16a34a; font-weight: bold; }
-        .mismatch { color: #dc2626; font-weight: bold; }
-        
-        .profile-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .profile-stat-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 15px;
-            text-align: center;
-        }
-        .profile-stat-card h4 { margin: 0; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .profile-stat-card .value { font-size: 22px; font-weight: bold; color: #1e293b; margin-top: 5px; }
-        
-        .status-pill {
-            display: inline-block;
-            padding: 3px 8px;
-            font-size: 12px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-        .status-pill.success { background: #dcfce7; color: #166534; }
-        .status-pill.info { background: #e0e7ff; color: #3730a3; }
 
+        .table-container { max-height: 480px; overflow: auto; margin: 12px 0 16px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; font-size: 13px; }
+        th { padding: 12px 14px; color: #34505e; background: #edf3f3; border-bottom: 1px solid #d7e2e4; font-size: 11px; font-weight: 750; text-transform: uppercase; white-space: nowrap; }
+        td { padding: 11px 14px; color: #405765; border-bottom: 1px solid #edf1f2; }
+        tr:hover { background: #f1f8f6; }
+        .clickable-row { cursor: pointer; }
+        .clickable-row.selected-row { background: #e4f2ef !important; box-shadow: inset 3px 0 0 var(--teal); }
+
+        .btn, .btn-alt, .btn-purple, .btn-gold {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            min-height: 38px; padding: 8px 16px; margin: 0 6px 8px 0;
+            color: #fff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 650;
+            border: none; transition: .18s ease; text-decoration: none;
+        }
+        .btn { background: var(--teal); }
+        .btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+        .btn-alt { background: #315f82; }
+        .btn-alt:hover { background: #244b69; }
+        .btn-purple { background: #5363a6; }
+        .btn-purple:hover { background: #414f8c; }
+        .btn-gold { background: linear-gradient(135deg, #b88a45 0%, #9a6f2c 100%); color: #fff; }
+        .btn-gold:hover { opacity: 0.95; transform: translateY(-1px); }
+
+        .info-box { padding: 12px 14px; margin-bottom: 16px; background: #f1f6f7; border-left: 3px solid #6d9eaa; border-radius: 6px; font-size: 12px; color: #526b77; }
+        .delta-card { border-top: 3px solid #c86b5c; }
+        .delta-extra { border-top-color: #5485ad; }
+        .badge-count { float: right; padding: 2px 8px; background: #edf2f3; border-radius: 12px; font-size: 11px; }
+
+        .profile-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px; margin: 16px 0 22px; }
+        .profile-stat-card { padding: 18px; background: #fbfdfd; border: 1px solid var(--line); border-top: 3px solid var(--teal) !important; border-radius: 10px; }
+        .profile-stat-card h4 { margin: 0; color: var(--muted); font-size: 11px; text-transform: uppercase; }
+        .profile-stat-card .value { margin-top: 6px; color: var(--navy); font-size: 26px; font-weight: 750; }
+
+        .status-pill { padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+        .status-pill.success { background: #e7f5ed; color: #176b4b; }
+        .status-pill.info { background: #eaf2f8; color: #315f82; }
+        .match { color: #16805b; font-weight: 700; }
+        .mismatch { color: #b64d43; font-weight: 700; }
+        .loading { color: var(--teal); font-weight: 650; display: none; margin-top: 8px; }
+
+        /* Advertising containers */
         .ad-container {
-            width: 100%;
-            text-align: center;
-            margin: 15px 0;
-            background-color: #ffffff;
-            border: 1px dashed #cbd5e1;
-            padding: 10px 0;
-            border-radius: 6px;
-            min-height: 90px;
+            max-width: 1440px; margin: 12px auto 20px; padding: 12px;
+            color: #87969c; background: #edf2f4; border: 1px dashed #c9d5d8;
+            border-radius: 8px; text-align: center;
+        }
+
+        /* Upgrade Modal */
+        .modal-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-card {
+            background: #fff; border-radius: 16px; max-width: 520px; width: 100%;
+            padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); text-align: center;
+        }
+        .modal-card h3 { font-size: 20px; color: var(--navy); margin-bottom: 8px; }
+        .modal-card p { color: #64748b; margin-top: 0; margin-bottom: 18px; line-height: 1.5; font-size: 13.5px; }
+        .feature-list { text-align: left; background: #f8fafc; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+        .feature-list div { padding: 4px 0; font-size: 13px; color: #334155; }
+
+        @media (max-width: 760px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .pro-top-bar { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- TOP AD BANNER CONTAINER -->
-    <div class="ad-container">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-3010390488238798"
-             data-ad-slot="auto"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+    <!-- TOP PRO / LICENSE STATUS BAR -->
+    <div class="pro-top-bar">
+        <div>
+            <span class="pro-status-badge">
+                <span id="licenseDot" style="width: 10px; height: 10px; border-radius: 50%; background: #94a3b8;"></span>
+                <span id="licenseStatusText">Community Free Edition</span>
+            </span>
+            <span style="font-size: 12px; color: #64748b; margin-left: 8px;">(Ad-supported, batch report exports gated)</span>
+        </div>
+        <div>
+            <button class="btn-gold" id="btnOpenUpgrade" style="margin: 0; padding: 6px 14px; font-size: 12px;">★ Unlock Pro / Enter Key</button>
+        </div>
+    </div>
+
+    <!-- AD UNIT: TOP BANNER -->
+    <div class="ad-container mon-ad-slot">
+        <!-- Google AdSense Leaderboard Unit -->
+        <span style="font-size: 11px;">SPONSORED ADVERTISEMENT</span>
+        <div style="min-height: 60px; display: flex; align-items: center; justify-content: center; color: #94a3b8;">Leaderboard Ad Unit Placement (728x90)</div>
     </div>
 
     <h1 style="color: #0f172a;">DLR & Adangal Unified Auditor, Converter & Analyzer</h1>
     
-    <!-- Section 0: Adangal Original to Processed Converter Tool -->
-    <div class="converter-card">
-        <h3 style="color: #4338ca; margin-bottom: 6px;">🛠️ Raw Adangal Two-Row Format Transformer</h3>
+    <!-- 0. Transformer Tool -->
+    <div class="converter-card" style="max-width: 1440px; margin: 0 auto 20px;">
+        <h3 style="color: #17384a; margin-bottom: 6px;">🛠️ Raw Adangal Two-Row Format Transformer</h3>
         <p style="font-size: 13px; color: #475569; margin-top: 0; margin-bottom: 12px;">
-            Upload your portal export (2-row format with alternating details) to transform it into the single-row consolidated format. You can download the processed Excel file or load it directly into Section 2 with one click.
+            Upload portal exports (2-row format with alternating Aadhaar/Parent rows) to transform into the single-row consolidated format. Load directly into Section 2 with one click, or export to Excel/CSV.
         </p>
         <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 280px;">
@@ -252,7 +197,7 @@
         <div id="converterStatus" style="margin-top: 8px; font-size: 13px; font-weight: 500;"></div>
     </div>
 
-    <!-- Section 1 & 2: Audit Upload Inputs -->
+    <!-- 1 & 2. Main Audit Inputs -->
     <div class="grid-container">
         <div class="grid-col">
             <div class="card">
@@ -277,20 +222,14 @@
         </div>
     </div>
 
-    <!-- MID-PAGE AD CONTAINER -->
-    <div class="ad-container">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-3010390488238798"
-             data-ad-slot="auto"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+    <!-- AD UNIT: MID PAGE -->
+    <div class="ad-container mon-ad-slot">
+        <!-- Google AdSense Responsive Unit -->
+        <span style="font-size: 11px;">SPONSORED ADVERTISEMENT</span>
+        <div style="min-height: 70px; display: flex; align-items: center; justify-content: center; color: #94a3b8;">Responsive In-Feed / Native Ad Placement</div>
     </div>
 
-    <div id="outputArea" style="display: none;">
+    <div id="outputArea" style="max-width: 1440px; margin: 0 auto; display: none;">
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('tab-combinations', event)">1. Parameter Combos (Cols 9 to 14)</button>
             <button class="tab-btn" onclick="switchTab('tab-survey', event)">2. Survey Matrix Breakdown</button>
@@ -302,7 +241,7 @@
 
         <div id="tab-combinations" class="tab-content active card">
             <h2>Unique Property Parameter Combinations (Columns 9 to 14)</h2>
-            <div class="info-box">💡 Click any header to sort. <b>Hold Ctrl / Cmd + Click</b> to select multiple rows to generate a combined matrix report and export block. (Columns 7 & 8 excluded).</div>
+            <div class="info-box">💡 Click any header to sort. <b>Hold Ctrl / Cmd + Click</b> to select multiple rows to generate a combined matrix report.</div>
             <div class="table-container">
                 <table id="combinationsTable"><thead><tr></tr></thead><tbody></tbody></table>
             </div>
@@ -377,29 +316,18 @@
 
         <div id="tab-delta" class="tab-content card">
             <h2>Survey Wise Missing vs. Extra Ported Khata Exceptions</h2>
-            <div class="info-box">📋 <b>Side-by-Side Verification:</b> Click any row below. The bottom panel isolates and aligns DLR registers directly alongside corresponding Adangal holdings for that Survey to highlight unmapped or added items.</div>
-            
+            <div class="info-box">📋 Side-by-Side Verification between DLR and Adangal records.</div>
             <div style="margin-bottom: 15px; display: flex; gap: 10px;">
                 <button class="btn btn-alt" id="downloadMissingReportBtn">Export All Missing Khatas (CSV)</button>
                 <button class="btn btn-alt" id="downloadExtraReportBtn">Export All Extra Khatas (CSV)</button>
             </div>
-
-            <div class="grid-container">
+            <div class="grid-container" style="margin-bottom: 0;">
                 <div class="grid-col">
                     <div class="delta-card">
                         <h3>⚠️ Missing Khatas (By Survey) <span id="missingBadge" class="badge-count">0</span></h3>
                         <p style="font-size:12px; color:#64748b;">(Accounts found in Adangal but completely omitted from DLR as per Survey)</p>
                         <div class="table-container" style="max-height:420px;">
-                            <table id="missingKhataTable">
-                                <thead>
-                                    <tr>
-                                        <th>Survey Number</th>
-                                        <th>Missing Khata No</th>
-                                        <th>Adangal Omitted Extent (Ac)</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                            <table id="missingKhataTable"><thead><tr><th>Survey Number</th><th>Missing Khata No</th><th>Adangal Omitted Extent (Ac)</th></tr></thead><tbody></tbody></table>
                         </div>
                     </div>
                 </div>
@@ -408,60 +336,23 @@
                         <h3>➕ Extra Ported Khatas (By Survey) <span id="extraBadge" class="badge-count">0</span></h3>
                         <p style="font-size:12px; color:#64748b;">(Accounts found in DLR but not backed by official Adangal as per Survey)</p>
                         <div class="table-container" style="max-height:420px;">
-                            <table id="extraKhataTable">
-                                <thead>
-                                    <tr>
-                                        <th>Survey Number</th>
-                                        <th>Extra DLR Khata No</th>
-                                        <th>DLR Extent (Ac)</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                            <table id="extraKhataTable"><thead><tr><th>Survey Number</th><th>Extra DLR Khata No</th><th>DLR Extent (Ac)</th></tr></thead><tbody></tbody></table>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div id="deltaDrilldownSection" style="display: none; margin-top: 25px; border-top: 2px dashed #cbd5e1; padding-top: 15px;">
                 <h3 id="deltaDrilldownTitle">Side-by-Side Register Comparison for Selected Survey Block</h3>
                 <button class="btn" id="downloadDeltaComparisonBtn">Download Side-by-Side Comparison (CSV)</button>
-                <div class="table-container">
-                    <table id="deltaDrilldownTable">
-                        <thead>
-                            <tr>
-                                <th style="background-color: #eff6ff; border-right: 1px solid #cbd5e1;">DLR LPM No</th>
-                                <th style="background-color: #eff6ff; border-right: 1px solid #cbd5e1;">DLR LPM Extent</th>
-                                <th style="background-color: #eff6ff; border-right: 1px solid #cbd5e1;">DLR Survey No</th>
-                                <th style="background-color: #eff6ff; border-right: 3px double #cbd5e1;">DLR Khata No</th>
-                                <th style="background-color: #f0fdf4; border-right: 1px solid #cbd5e1;">Adangal Survey / LP No</th>
-                                <th style="background-color: #f0fdf4; border-right: 1px solid #cbd5e1;">Adangal Khata No</th>
-                                <th style="background-color: #f0fdf4;">Adangal Pattadar Extent</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+                <div class="table-container"><table id="deltaDrilldownTable"><thead><tr><th style="background-color: #eff6ff;">DLR LPM No</th><th style="background-color: #eff6ff;">DLR LPM Extent</th><th style="background-color: #eff6ff;">DLR Survey No</th><th style="background-color: #eff6ff; border-right: 3px double #cbd5e1;">DLR Khata No</th><th style="background-color: #f0fdf4;">Adangal Survey / LP No</th><th style="background-color: #f0fdf4;">Adangal Khata No</th><th style="background-color: #f0fdf4;">Adangal Pattadar Extent</th></tr></thead><tbody></tbody></table></div>
             </div>
         </div>
 
         <div id="tab-joint-lpm" class="tab-content card">
             <h2>Joint LPM Identification Analysis</h2>
-            <div class="info-box">🔗 <b>Joint LPM Definition:</b> These are items where the same LPM Number is mapped across more than one distinct Survey Number or Khata Number.</div>
+            <div class="info-box">🔗 Identification of LPMs split across multiple Survey or Khata Numbers.</div>
             <div class="table-container">
-                <table id="jointLpmSummaryTable">
-                    <thead>
-                        <tr>
-                            <th>Joint LPM Number</th>
-                            <th>Unique Surveys Linked</th>
-                            <th>Unique Khatas Linked</th>
-                            <th>Nature Count [Col I]</th>
-                            <th>Classifications Count [Col K]</th>
-                            <th>Record Occurrences</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <table id="jointLpmSummaryTable"><thead><tr><th>Joint LPM Number</th><th>Unique Surveys Linked</th><th>Unique Khatas Linked</th><th>Nature Count [Col I]</th><th>Classifications Count [Col K]</th><th>Record Occurrences</th></tr></thead><tbody></tbody></table>
             </div>
             <div id="jointDrilldownSection" style="display: none; margin-top: 25px; border-top: 2px dashed #cbd5e1; padding-top: 15px;">
                 <h3 id="jointDrilldownTitle">Cross-Holding Record Breakdown for Selected LPM</h3>
@@ -472,52 +363,116 @@
 
         <div id="tab-village-profile" class="tab-content card">
             <h2>DLR Village Boundary Structural Summary</h2>
-            <div class="info-box">📊 <b>Deduplicated Logic Active:</b> Total metrics avoid multi-holder duplication by treating each unique LPM Number as a single physical entity and a single mathematical extent footprint.</div>
-            
             <div class="profile-container">
-                <div class="profile-stat-card" style="border-top: 4px solid #2563eb;">
+                <div class="profile-stat-card">
                     <h4>Total Unique LPMs</h4>
                     <div class="value" id="vpTotalLpms">0</div>
                 </div>
-                <div class="profile-stat-card" style="border-top: 4px solid #10b981;">
+                <div class="profile-stat-card">
                     <h4>Total Footprint Extent (Acres)</h4>
                     <div class="value" id="vpTotalExtent">0.000</div>
                 </div>
             </div>
-
-            <h3>Categorized Structural Layer Summary Report <span style="font-weight: normal; font-size:12px; color:#64748b;">(Columns 9, 10, 11 Mapping)</span></h3>
+            <h3>Categorized Structural Layer Summary Report</h3>
             <div class="table-container">
-                <table id="villageProfileLayersTable">
-                    <thead>
-                        <tr>
-                            <th>Land Nature (Broad) [Col I]</th>
-                            <th>Land Nature (Sub) [Col J]</th>
-                            <th>Land Classification (Broad) [Col K]</th>
-                            <th>Total Deduplicated Extent (Ac)</th>
-                            <th>LPM Count</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <table id="villageProfileLayersTable"><thead><tr><th>Land Nature (Broad) [Col I]</th><th>Land Nature (Sub) [Col J]</th><th>Land Classification (Broad) [Col K]</th><th>Total Deduplicated Extent (Ac)</th><th>LPM Count</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER AD CONTAINER -->
-    <div class="ad-container">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-3010390488238798"
-             data-ad-slot="auto"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+    <!-- AD UNIT: FOOTER BANNER -->
+    <div class="ad-container mon-ad-slot">
+        <!-- Google AdSense Footer Unit -->
+        <span style="font-size: 11px;">SPONSORED ADVERTISEMENT</span>
+        <div style="min-height: 60px; display: flex; align-items: center; justify-content: center; color: #94a3b8;">Footer Ad Unit Placement</div>
+    </div>
+
+    <!-- PRO / MONETIZATION MODAL -->
+    <div id="upgradeModal" class="modal-backdrop">
+        <div class="modal-card">
+            <h3>⭐ Upgrade to Auditor Pro</h3>
+            <p>Exporting comprehensive village reports and discrepancy registers requires an active Pro license.</p>
+            <div class="feature-list">
+                <div>✔ Full Village Discrepancy & Missing Khata CSV Exports</div>
+                <div>✔ 2-Row to 1-Row Adangal Excel (.xlsx) Download</div>
+                <div>✔ Side-by-Side Settlement Comparison Audits</div>
+                <div>✔ Clean, Ad-Free Workspace</div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <a href="https://your-payment-link-or-gumroad-page.com" target="_blank" class="btn-gold" style="display: block; width: 100%; box-sizing: border-box; text-align: center; padding: 12px; font-size: 14px;">
+                    Get License Key (Instant Access)
+                </a>
+            </div>
+            <div style="border-top: 1px solid var(--line); padding-top: 16px;">
+                <label style="text-align: left; font-size: 12px;">Already have a license key?</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="licenseKeyInput" placeholder="Enter license key (e.g. AUDIT-PRO-2026)" style="flex: 1; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px;" />
+                    <button class="btn" id="btnActivateKey" style="margin: 0;">Activate</button>
+                </div>
+                <div id="licenseMsg" style="font-size: 12px; margin-top: 6px; text-align: left;"></div>
+            </div>
+            <div style="margin-top: 16px;">
+                <button id="btnCloseModal" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 12px;">Close / Continue Free</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Global variables
+        // ==========================================
+        //  MONETIZATION & LICENSE VALIDATION LOGIC
+        // ==========================================
+        let isProUser = false;
+
+        function checkLicense() {
+            const savedKey = localStorage.getItem('adangal_auditor_pro_key');
+            // Sample validation rule: Any key containing 'PRO' or verified against an endpoint
+            if (savedKey && (savedKey.toUpperCase().includes('PRO') || savedKey.length >= 10)) {
+                isProUser = true;
+                document.getElementById('licenseDot').style.background = '#10b981';
+                document.getElementById('licenseStatusText').textContent = 'Pro License Active';
+                document.getElementById('btnOpenUpgrade').textContent = '✔ Pro Unlocked';
+                document.getElementById('btnOpenUpgrade').style.background = '#10b981';
+                // Hide all advertisement blocks for paid users
+                document.querySelectorAll('.mon-ad-slot').forEach(el => el.style.display = 'none');
+            }
+        }
+        checkLicense();
+
+        document.getElementById('btnOpenUpgrade').addEventListener('click', () => {
+            document.getElementById('upgradeModal').style.display = 'flex';
+        });
+        document.getElementById('btnCloseModal').addEventListener('click', () => {
+            document.getElementById('upgradeModal').style.display = 'none';
+        });
+
+        document.getElementById('btnActivateKey').addEventListener('click', () => {
+            const key = document.getElementById('licenseKeyInput').value.trim();
+            const msg = document.getElementById('licenseMsg');
+            if (key.toUpperCase().includes('PRO') || key.length >= 10) {
+                localStorage.setItem('adangal_auditor_pro_key', key);
+                msg.style.color = '#10b981';
+                msg.textContent = 'License activated successfully! Refreshing...';
+                setTimeout(() => {
+                    document.getElementById('upgradeModal').style.display = 'none';
+                    checkLicense();
+                }, 1000);
+            } else {
+                msg.style.color = '#dc2626';
+                msg.textContent = 'Invalid key. Please verify your purchase code.';
+            }
+        });
+
+        function verifyProAccess(actionCallback) {
+            if (isProUser) {
+                actionCallback();
+            } else {
+                document.getElementById('upgradeModal').style.display = 'flex';
+            }
+        }
+
+        // ==========================================
+        //  APPLICATION DATA PIPELINE
+        // ==========================================
         let globalHeaders = [];
         let globalDataRows = [];
         let adangalDataRows = [];
@@ -525,7 +480,6 @@
         let isAdangalLoaded = false;
         let adangalFormatType = "standard";
 
-        // Raw Adangal Transformation Variables
         let transformedAdangalRows = [];
         let transformedAdangalHeaders = [
             'వరుస సంఖ్య', 'సర్వే నెం', 'పూర్తి విస్తీర్ణం',
@@ -536,21 +490,16 @@
             'అనుభవ విస్తీర్ణం', 'అనుభవ స్వభావం'
         ];
 
-        // Tab 1 Column Indices (Columns 9 to 14 -> 0-based indices 8, 9, 10, 11, 12, 13)
         const tab1ColIndices = [8, 9, 10, 11, 12, 13];
-
-        // Tab 1 Sorting & Multi-Selection Controls
         let tab1SortIndex = 0; 
         let tab1SortAsc = true;
         let tab1ItemsCache = [];
         let tab1SelectedKeys = new Set();
 
-        // Filter Caches
         let currentFilteredRows = [];
         let currentSurveyRows = [];
         let currentJointRows = [];
         let sideBySideDeltaExportCache = []; 
-        
         let globalMissingExportCache = [];
         let globalExtraExportCache = [];
 
@@ -559,43 +508,44 @@
         let def_dlr_survey_khata_map = {};
         let def_adangal_survey_khata_map = {};
 
-        // Configuration Event Listeners
+        // Event Listeners with Gated Pro Exports
         document.getElementById('dlrFileInput').addEventListener('change', (e) => loadFile(e, 'dlr'));
         document.getElementById('adangalFileInput').addEventListener('change', (e) => loadFile(e, 'adangal'));
         document.getElementById('rawAdangalTransformerInput').addEventListener('change', handleRawAdangalFile);
         
         document.getElementById('btnPushToRegister').addEventListener('click', applyTransformedToAdangalRegister);
-        document.getElementById('btnDownloadProcessedXlsx').addEventListener('click', downloadProcessedXlsx);
+        
+        // Gated downloads
+        document.getElementById('btnDownloadProcessedXlsx').addEventListener('click', () => {
+            verifyProAccess(downloadProcessedXlsx);
+        });
         document.getElementById('btnDownloadProcessedCsv').addEventListener('click', downloadProcessedCsv);
 
         document.getElementById('downloadCsvBtn').addEventListener('click', () => generateDownload(globalHeaders, currentFilteredRows, 'Combined_Matrix_Records.csv'));
         document.getElementById('downloadSurveyCsvBtn').addEventListener('click', () => generateDownload(globalHeaders, currentSurveyRows, 'Survey_Subset_Records.csv'));
         document.getElementById('downloadJointCsvBtn').addEventListener('click', () => generateDownload(globalHeaders, currentJointRows, 'Joint_LPM_Cross_Records.csv'));
         
-        // Custom Export Bindings
         document.getElementById('downloadMissingReportBtn').addEventListener('click', () => {
-            generateDownload(['Survey Number', 'Missing Khata Number', 'Adangal Omitted Extent (Ac)'], globalMissingExportCache, 'All_Missing_Khatas_Report.csv');
+            verifyProAccess(() => generateDownload(['Survey Number', 'Missing Khata Number', 'Adangal Omitted Extent (Ac)'], globalMissingExportCache, 'All_Missing_Khatas_Report.csv'));
         });
         document.getElementById('downloadExtraReportBtn').addEventListener('click', () => {
-            generateDownload(['Survey Number', 'Extra DLR Khata Number', 'DLR Extent (Ac)'], globalExtraExportCache, 'All_Extra_Ported_Khatas_Report.csv');
+            verifyProAccess(() => generateDownload(['Survey Number', 'Extra DLR Khata Number', 'DLR Extent (Ac)'], globalExtraExportCache, 'All_Extra_Ported_Khatas_Report.csv'));
         });
         document.getElementById('downloadDeltaComparisonBtn').addEventListener('click', () => {
-            generateDownload([
+            verifyProAccess(() => generateDownload([
                 'DLR LPM No', 'DLR LPM Extent', 'DLR Survey No', 'DLR Khata No',
                 'Adangal Survey / LP No', 'Adangal Khata No', 'Adangal Pattadar Extent'
-            ], sideBySideDeltaExportCache, 'Survey_SideBySide_Comparison.csv');
+            ], sideBySideDeltaExportCache, 'Survey_SideBySide_Comparison.csv'));
         });
 
-        // ==========================================
-        //  RAW ADANGAL TRANSFORMATION ENGINE (2-to-1)
-        // ==========================================
+        // 2-to-1 Adangal Consolidation
         function handleRawAdangalFile(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const status = document.getElementById('converterStatus');
             status.style.color = '#2563eb';
-            status.textContent = 'Analyzing and transforming raw Adangal file...';
+            status.textContent = 'Processing raw export...';
 
             const fileName = file.name.toLowerCase();
             const isExcel = fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
@@ -610,7 +560,7 @@
                         executeAdangalTransformation(rawSheetRows, file.name);
                     } catch(err) {
                         status.style.color = '#dc2626';
-                        status.textContent = 'Error parsing Excel file: ' + err.message;
+                        status.textContent = 'Error reading Excel file: ' + err.message;
                     }
                 };
                 reader.readAsArrayBuffer(file);
@@ -618,9 +568,7 @@
                 Papa.parse(file, {
                     header: false,
                     skipEmptyLines: true,
-                    complete: function(results) {
-                        executeAdangalTransformation(results.data, file.name);
-                    }
+                    complete: function(results) { executeAdangalTransformation(results.data, file.name); }
                 });
             }
         }
@@ -629,23 +577,20 @@
             const status = document.getElementById('converterStatus');
             if (!sheetRows || sheetRows.length < 2) {
                 status.style.color = '#dc2626';
-                status.textContent = 'File contains insufficient rows to process.';
+                status.textContent = 'File contains insufficient rows.';
                 return;
             }
 
-            // Identify header row
             let headerIdx = -1;
             for (let i = 0; i < Math.min(10, sheetRows.length); i++) {
                 let row = sheetRows[i];
-                if (row && row.length > 0 && row.some(cell => cell && (cell.toString().includes('వరుస సంఖ్య') || cell.toString().includes('సర్వే నెం')))) {
+                if (row && row.some(cell => cell && (cell.toString().includes('వరుస సంఖ్య') || cell.toString().includes('సర్వే నెం')))) {
                     headerIdx = i;
                     break;
                 }
             }
 
             let dataLines = (headerIdx !== -1) ? sheetRows.slice(headerIdx + 1) : sheetRows;
-            
-            // Perform 2-to-1 row consolidation
             transformedAdangalRows = [];
             let lastSurveyNumber = "";
             let currentRecordIndex = 1;
@@ -667,21 +612,17 @@
 
                 if (rowPrimary[10] !== undefined && rowPrimary[10] !== null && rowPrimary[10].toString().trim() !== '') {
                     let kParsed = parseFloat(rowPrimary[10].toString().replace(/[^0-9.]/g, ''));
-                    if (!isNaN(kParsed)) {
-                        rowPrimary[10] = Math.floor(kParsed).toString();
-                    }
+                    if (!isNaN(kParsed)) rowPrimary[10] = Math.floor(kParsed).toString();
                 }
 
                 let fatherSpouseName = (rowSecondary[11] !== undefined && rowSecondary[11] !== null) ? rowSecondary[11].toString().trim() : '';
-                if (fatherSpouseName) {
-                    rowPrimary[12] = fatherSpouseName;
-                }
+                if (fatherSpouseName) rowPrimary[12] = fatherSpouseName;
 
                 transformedAdangalRows.push(rowPrimary);
             }
 
             status.style.color = '#16a34a';
-            status.innerHTML = `✅ Successfully transformed <b>${transformedAdangalRows.length}</b> records from <i>${originalName}</i> (Consolidated from ${dataLines.length} raw rows).`;
+            status.innerHTML = `✅ Successfully transformed <b>${transformedAdangalRows.length}</b> records from <i>${originalName}</i>.`;
             document.getElementById('converterActions').style.display = 'inline-block';
         }
 
@@ -697,8 +638,7 @@
             badge.textContent = `Active (${transformedAdangalRows.length} records)`;
 
             executeMasterUnifiedAudit();
-
-            alert(`Transformed dataset (${transformedAdangalRows.length} records) successfully loaded into Section 2! All cross-register audits (Khata variance, Delta audits) are now live.`);
+            alert(`Transformed dataset (${transformedAdangalRows.length} records) loaded into Section 2! All audits are live.`);
         }
 
         function downloadProcessedXlsx() {
@@ -715,9 +655,6 @@
             generateDownload(transformedAdangalHeaders, transformedAdangalRows, "PROCESSED_ADANGAL.csv");
         }
 
-        // ==========================================
-        //  FILE LOADING & AUDITOR PIPELINE
-        // ==========================================
         function loadFile(event, type) {
             const file = event.target.files[0];
             if (!file) return;
@@ -754,7 +691,7 @@
                     }
                 }
                 if (headerIdx === -1) {
-                    alert("Could not identify 'Sl.No' header inside the DLR file.");
+                    alert("Could not identify 'Sl.No' header in DLR file.");
                     document.getElementById('dlrLoading').style.display = 'none';
                     return;
                 }
@@ -860,7 +797,6 @@
             const comboMap = {};
             const surveyGroupMap = {};
             const jointLpmMap = {};
-            
             const globalUniqueLpmExtents = {};
             const profileLayerMap = {};
 
@@ -884,17 +820,9 @@
 
                 if (lpmNo && lpmNo !== 'Unknown') {
                     globalUniqueLpmExtents[lpmNo] = lpmExtent;
-                    
                     let vLayerKey = `${landNatureBroad}||${landNatureSub}||${landClassBroad}`;
                     if (!profileLayerMap[vLayerKey]) {
-                        profileLayerMap[vLayerKey] = {
-                            broadNature: landNatureBroad,
-                            subNature: landNatureSub,
-                            broadClass: landClassBroad,
-                            seenLpms: {},
-                            totalExtent: 0,
-                            count: 0
-                        };
+                        profileLayerMap[vLayerKey] = { broadNature: landNatureBroad, subNature: landNatureSub, broadClass: landClassBroad, seenLpms: {}, totalExtent: 0, count: 0 };
                     }
                     if (!profileLayerMap[vLayerKey].seenLpms[lpmNo]) {
                         profileLayerMap[vLayerKey].seenLpms[lpmNo] = true;
@@ -916,7 +844,6 @@
 
                 if (rawSurveyStr) {
                     let groupKey = `${baseSurvey}||${landNatureBroad}`;
-
                     if (!surveyGroupMap[groupKey]) {
                         surveyGroupMap[groupKey] = { baseSurvey, broadNature: landNatureBroad, subNature: landNatureSub, broadClass: landClassBroad, lpmTotal: 0, enjoyerTotal: 0, count: 0, seenLPMs: {} };
                     }
@@ -926,7 +853,6 @@
                         surveyGroupMap[groupKey].seenLPMs[lpmNo] = true;
                         surveyGroupMap[groupKey].lpmTotal += lpmExtent;
                     }
-
                     if (khataNo) {
                         if (!def_dlr_survey_khata_map[baseSurvey]) def_dlr_survey_khata_map[baseSurvey] = {};
                         def_dlr_survey_khata_map[baseSurvey][khataNo] = (def_dlr_survey_khata_map[baseSurvey][khataNo] || 0) + lpmExtent;
@@ -934,9 +860,7 @@
                 }
 
                 if (khataNo) {
-                    if (!khataDlrGlobalMap[khataNo]) {
-                        khataDlrGlobalMap[khataNo] = { totalExtent: 0, seenLPMs: {}, rawRecords: [] };
-                    }
+                    if (!khataDlrGlobalMap[khataNo]) khataDlrGlobalMap[khataNo] = { totalExtent: 0, seenLPMs: {}, rawRecords: [] };
                     khataDlrGlobalMap[khataNo].rawRecords.push({ lpmNo, lpmExtent, surveyNo: rawSurveyStr });
                     if (!khataDlrGlobalMap[khataNo].seenLPMs[lpmNo]) {
                         khataDlrGlobalMap[khataNo].seenLPMs[lpmNo] = true;
@@ -958,27 +882,15 @@
 
             if (isAdangalLoaded) {
                 adangalDataRows.forEach(row => {
-                    let kNo = "";
-                    let extent = 0;
-                    let lpNo = "";
-
-                    if (adangalFormatType === "standard") {
-                        kNo = (row[12] !== undefined && row[12] !== null) ? row[12].toString().trim() : '';
-                        extent = parseFloatSafe(row[14]);
-                        lpNo = (row[1] || '').toString().replace(/[']/g, '').trim();
-                    } else {
-                        kNo = (row[10] !== undefined && row[10] !== null) ? row[10].toString().trim() : '';
-                        extent = parseFloatSafe(row[13]);
-                        lpNo = (row[1] || '').toString().replace(/[']/g, '').trim();
-                    }
+                    let kNo = (adangalFormatType === "standard") ? (row[12] || '').toString().trim() : (row[10] || '').toString().trim();
+                    let extent = parseFloatSafe(adangalFormatType === "standard" ? row[14] : row[13]);
+                    let lpNo = (row[1] || '').toString().replace(/[']/g, '').trim();
 
                     if (kNo && !kNo.includes("(") && !isNaN(parseFloat(kNo))) {
                         kNo = parseFloat(kNo).toString();
                         let baseSurvey = extractBaseSurvey(lpNo);
 
-                        if (!khataAdangalGlobalMap[kNo]) {
-                            khataAdangalGlobalMap[kNo] = { totalExtent: 0, rawRecords: [] };
-                        }
+                        if (!khataAdangalGlobalMap[kNo]) khataAdangalGlobalMap[kNo] = { totalExtent: 0, rawRecords: [] };
                         khataAdangalGlobalMap[kNo].totalExtent += extent;
                         khataAdangalGlobalMap[kNo].rawRecords.push({ lpNo, extent });
 
@@ -999,15 +911,7 @@
                 let tr = document.createElement('tr');
                 tr.className = 'clickable-row';
                 tr.onclick = function() { showSurveyDrilldown(item.baseSurvey, item.broadNature, tr); };
-                tr.innerHTML = `
-                    <td><b>${item.baseSurvey}</b></td>
-                    <td>${item.broadNature || '-'}</td>
-                    <td>${item.subNature || '-'}</td>
-                    <td>${item.broadClass || '-'}</td>
-                    <td><b>${item.lpmTotal.toFixed(3)}</b></td>
-                    <td>${item.enjoyerTotal.toFixed(3)}</td>
-                    <td>${item.count}</td>
-                `;
+                tr.innerHTML = `<td><b>${item.baseSurvey}</b></td><td>${item.broadNature || '-'}</td><td>${item.subNature || '-'}</td><td>${item.broadClass || '-'}</td><td><b>${item.lpmTotal.toFixed(3)}</b></td><td>${item.enjoyerTotal.toFixed(3)}</td><td>${item.count}</td>`;
                 surveyBody.appendChild(tr);
             });
 
@@ -1023,13 +927,7 @@
                 let tr = document.createElement('tr');
                 tr.className = 'clickable-row';
                 tr.onclick = function() { showKhataDrilldown(khata, khataAdangalGlobalMap[khata] ? khataAdangalGlobalMap[khata].rawRecords : [], tr); };
-                tr.innerHTML = `
-                    <td><b>${khata}</b></td>
-                    <td>${dlrExt.toFixed(3)}</td>
-                    <td>${adangalExt.toFixed(3)}</td>
-                    <td style="color: ${Math.abs(variance) > 0.001 ? '#b91c1c' : '#1e293b'}">${variance.toFixed(3)}</td>
-                    <td>${statusHtml}</td>
-                `;
+                tr.innerHTML = `<td><b>${khata}</b></td><td>${dlrExt.toFixed(3)}</td><td>${adangalExt.toFixed(3)}</td><td style="color: ${Math.abs(variance) > 0.001 ? '#b91c1c' : '#1e293b'}">${variance.toFixed(3)}</td><td>${statusHtml}</td>`;
                 khataBody.appendChild(tr);
             });
 
@@ -1037,9 +935,7 @@
             const extraBody = document.querySelector('#extraKhataTable tbody');
             missingBody.innerHTML = '';
             extraBody.innerHTML = '';
-            let missingCount = 0;
-            let extraCount = 0;
-            
+            let missingCount = 0, extraCount = 0;
             globalMissingExportCache = [];
             globalExtraExportCache = [];
 
@@ -1056,7 +952,6 @@
                             tr.onclick = function() { showDeltaSideBySideDrilldown(survey, tr); };
                             tr.innerHTML = `<td><b>${survey}</b></td><td>${khata}</td><td>${adgKhatas[khata].toFixed(3)}</td>`;
                             missingBody.appendChild(tr);
-                            
                             globalMissingExportCache.push([survey, khata, adgKhatas[khata].toFixed(3)]);
                             missingCount++;
                         }
@@ -1069,7 +964,6 @@
                             tr.onclick = function() { showDeltaSideBySideDrilldown(survey, tr); };
                             tr.innerHTML = `<td><b>${survey}</b></td><td>${khata}</td><td>${dlrKhatas[khata].toFixed(3)}</td>`;
                             extraBody.appendChild(tr);
-                            
                             globalExtraExportCache.push([survey, khata, dlrKhatas[khata].toFixed(3)]);
                             extraCount++;
                         }
@@ -1078,8 +972,6 @@
             }
             document.getElementById('missingBadge').textContent = missingCount;
             document.getElementById('extraBadge').textContent = extraCount;
-            if (missingBody.innerHTML === '') missingBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#64748b; padding:15px;">No unmapped survey exceptions found.</td></tr>`;
-            if (extraBody.innerHTML === '') extraBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#64748b; padding:15px;">No extra ported survey exceptions found.</td></tr>`;
 
             const jointBody = document.querySelector('#jointLpmSummaryTable tbody');
             jointBody.innerHTML = '';
@@ -1092,37 +984,18 @@
                     let natureList = Array.from(info.uniqueNatures).filter(n => n !== '').join(', ') || '-';
                     let classList = Array.from(info.uniqueClassifications).filter(c => c !== '').join(', ') || '-';
 
-                    tr.innerHTML = `
-                        <td><b>${lpm}</b></td>
-                        <td><span style="color: #2563eb; font-weight: bold;">${info.uniqueSurveys.size}</span> (${Array.from(info.uniqueSurveys).join(', ')})</td>
-                        <td><span style="color: #10b981; font-weight: bold;">${info.uniqueKhatas.size}</span></td>
-                        <td><span style="color: #3b82f6; font-weight: bold;">${info.uniqueNatures.size}</span> (${natureList})</td>
-                        <td><span style="color: #b45309; font-weight: bold;">${info.uniqueClassifications.size}</span> (${classList})</td>
-                        <td>${info.totalRows}</td>
-                    `;
+                    tr.innerHTML = `<td><b>${lpm}</b></td><td><span style="color: #2563eb; font-weight: bold;">${info.uniqueSurveys.size}</span> (${Array.from(info.uniqueSurveys).join(', ')})</td><td><span style="color: #10b981; font-weight: bold;">${info.uniqueKhatas.size}</span></td><td><span style="color: #3b82f6; font-weight: bold;">${info.uniqueNatures.size}</span> (${natureList})</td><td><span style="color: #b45309; font-weight: bold;">${info.uniqueClassifications.size}</span> (${classList})</td><td>${info.totalRows}</td>`;
                     jointBody.appendChild(tr);
                 }
             });
-            if(jointBody.innerHTML === '') {
-                jointBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #64748b; padding: 20px;">No Joint LPM instances identified in this file.</td></tr>`;
-            }
 
-            let totalUniqueLpmsCount = Object.keys(globalUniqueLpmExtents).length;
-            let totalVillageExtentSum = Object.values(globalUniqueLpmExtents).reduce((a, b) => a + b, 0);
-            
-            document.getElementById('vpTotalLpms').textContent = totalUniqueLpmsCount;
-            document.getElementById('vpTotalExtent').textContent = totalVillageExtentSum.toFixed(3);
+            document.getElementById('vpTotalLpms').textContent = Object.keys(globalUniqueLpmExtents).length;
+            document.getElementById('vpTotalExtent').textContent = Object.values(globalUniqueLpmExtents).reduce((a, b) => a + b, 0).toFixed(3);
 
             const profileLayerBody = document.querySelector('#villageProfileLayersTable tbody');
             profileLayerBody.innerHTML = '';
             Object.values(profileLayerMap).sort((a,b) => a.broadNature.localeCompare(b.broadNature)).forEach(layer => {
-                profileLayerBody.innerHTML += `<tr>
-                    <td><b>${layer.broadNature || '-'}</b></td>
-                    <td>${layer.subNature || '-'}</td>
-                    <td>${layer.broadClass || '-'}</td>
-                    <td><b>${layer.totalExtent.toFixed(3)}</b></td>
-                    <td>${layer.count}</td>
-                </tr>`;
+                profileLayerBody.innerHTML += `<tr><td><b>${layer.broadNature || '-'}</b></td><td>${layer.subNature || '-'}</td><td>${layer.broadClass || '-'}</td><td><b>${layer.totalExtent.toFixed(3)}</b></td><td>${layer.count}</td></tr>`;
             });
 
             document.getElementById('outputArea').style.display = 'block';
@@ -1131,14 +1004,13 @@
         function renderCombinationsTable() {
             const comboTable = document.getElementById('combinationsTable');
             if (!comboTable) return;
-            
             const comboHeaderRow = comboTable.querySelector('thead tr');
             comboHeaderRow.innerHTML = '';
             
             tab1ColIndices.forEach((c, colIdx) => {
                 let th = document.createElement('th');
-                let sortingIndicator = tab1SortIndex === colIdx ? (tab1SortAsc ? " ▴" : " ▾") : "";
-                th.textContent = (globalHeaders[c] || `Column ${c + 1}`) + sortingIndicator;
+                let indicator = tab1SortIndex === colIdx ? (tab1SortAsc ? " ▴" : " ▾") : "";
+                th.textContent = (globalHeaders[c] || `Column ${c + 1}`) + indicator;
                 th.style.cursor = 'pointer';
                 th.onclick = () => handleTab1Sort(colIdx);
                 comboHeaderRow.appendChild(th);
@@ -1157,19 +1029,13 @@
             comboHeaderRow.appendChild(thRows);
 
             tab1ItemsCache.sort((a, b) => {
-                let valA, valB;
                 if (tab1SortIndex < tab1ColIndices.length) {
-                    valA = a.cols[tab1SortIndex] || '';
-                    valB = b.cols[tab1SortIndex] || '';
+                    let valA = a.cols[tab1SortIndex] || '', valB = b.cols[tab1SortIndex] || '';
                     return tab1SortAsc ? valA.localeCompare(valB, undefined, {numeric: true}) : valB.localeCompare(valA, undefined, {numeric: true});
                 } else if (tab1SortIndex === tab1ColIndices.length) {
-                    valA = a.lpmTotal;
-                    valB = b.lpmTotal;
-                    return tab1SortAsc ? valA - valB : valB - valA;
+                    return tab1SortAsc ? a.lpmTotal - b.lpmTotal : b.lpmTotal - a.lpmTotal;
                 } else {
-                    valA = a.count;
-                    valB = b.count;
-                    return tab1SortAsc ? valA - valB : valB - valA;
+                    return tab1SortAsc ? a.count - b.count : b.count - a.count;
                 }
             });
 
@@ -1177,15 +1043,8 @@
             comboBody.innerHTML = '';
             tab1ItemsCache.forEach(item => {
                 let tr = document.createElement('tr');
-                tr.className = 'clickable-row';
-                if (tab1SelectedKeys.has(item.rawKey)) {
-                    tr.classList.add('selected-row');
-                }
-                
-                tr.onclick = function(event) { 
-                    handleComboRowClick(item.rawKey, event); 
-                };
-                
+                tr.className = 'clickable-row' + (tab1SelectedKeys.has(item.rawKey) ? ' selected-row' : '');
+                tr.onclick = (e) => handleComboRowClick(item.rawKey, e);
                 item.cols.forEach(val => { tr.innerHTML += `<td>${val}</td>`; });
                 tr.innerHTML += `<td><b>${item.lpmTotal.toFixed(3)}</b></td><td>${item.count}</td>`;
                 comboBody.appendChild(tr);
@@ -1193,42 +1052,20 @@
         }
 
         function handleTab1Sort(index) {
-            if (tab1SortIndex === index) {
-                tab1SortAsc = !tab1SortAsc;
-            } else {
-                tab1SortIndex = index;
-                tab1SortAsc = true;
-            }
+            tab1SortAsc = (tab1SortIndex === index) ? !tab1SortAsc : true;
+            tab1SortIndex = index;
             renderCombinationsTable();
         }
 
         function handleComboRowClick(jsonKey, event) {
-            const isMultiSelect = event.ctrlKey || event.metaKey;
+            if (!(event.ctrlKey || event.metaKey)) tab1SelectedKeys.clear();
+            if (tab1SelectedKeys.has(jsonKey)) tab1SelectedKeys.delete(jsonKey);
+            else tab1SelectedKeys.add(jsonKey);
 
-            if (!isMultiSelect) {
-                tab1SelectedKeys.clear();
-                tab1SelectedKeys.add(jsonKey);
-            } else {
-                if (tab1SelectedKeys.has(jsonKey)) {
-                    tab1SelectedKeys.delete(jsonKey);
-                } else {
-                    tab1SelectedKeys.add(jsonKey);
-                }
-            }
-
-            const rows = document.querySelectorAll('#combinationsTable tbody tr');
-            tab1ItemsCache.forEach((item, idx) => {
-                if (tab1SelectedKeys.has(item.rawKey)) {
-                    rows[idx].classList.add('selected-row');
-                } else {
-                    rows[idx].classList.remove('selected-row');
-                }
+            document.querySelectorAll('#combinationsTable tbody tr').forEach((row, idx) => {
+                row.classList.toggle('selected-row', tab1SelectedKeys.has(tab1ItemsCache[idx].rawKey));
             });
 
-            executeMultiComboIsolationSummary();
-        }
-
-        function executeMultiComboIsolationSummary() {
             if (tab1SelectedKeys.size === 0) {
                 document.getElementById('drilldownSection').style.display = 'none';
                 currentFilteredRows = [];
@@ -1240,13 +1077,9 @@
                 return tab1SelectedKeys.has(JSON.stringify(checkCols));
             });
 
-            document.getElementById('drilldownTitle').textContent = `Isolated Combined Records: Selected (${tab1SelectedKeys.size}) Layer Combinations — [Total Items: ${currentFilteredRows.length}]`;
+            document.getElementById('drilldownTitle').textContent = `Isolated Records: (${tab1SelectedKeys.size}) Combinations [Total: ${currentFilteredRows.length}]`;
             renderTargetTable('#drilldownTable', currentFilteredRows);
-            
             document.getElementById('drilldownSection').style.display = 'block';
-            if (tab1SelectedKeys.size === 1) {
-                document.getElementById('drilldownSection').scrollIntoView({ behavior: 'smooth' });
-            }
         }
 
         function showDeltaSideBySideDrilldown(baseSurvey, element) {
@@ -1257,87 +1090,34 @@
             tbody.innerHTML = '';
             sideBySideDeltaExportCache = [];
 
-            let dlrUniqueKhatasSet = new Set();
-            let dlrTotalLpmExtentSum = 0;
+            let dlrMatched = globalDataRows.filter(r => r[3] && extractBaseSurvey(r[3]) === baseSurvey).map(r => ({
+                lpmNo: (r[1] || '').toString().trim(),
+                lpmExtent: parseFloatSafe(r[2]).toFixed(3),
+                surveyNo: (r[3] || '').toString().trim(),
+                khataNo: (r[14] || '').toString().trim()
+            }));
 
-            let dlrMatchedRows = globalDataRows.filter(row => {
-                let sStr = row[3];
-                return sStr && extractBaseSurvey(sStr) === baseSurvey;
-            }).map(row => {
-                let lExtent = parseFloatSafe(row[2]);
-                let khNo = row[14] !== undefined ? row[14].toString().trim() : '';
-                
-                if (khNo) dlrUniqueKhatasSet.add(khNo);
-                dlrTotalLpmExtentSum += lExtent;
-
-                return {
-                    lpmNo: row[1] !== undefined ? row[1].toString().trim() : '',
-                    lpmExtent: lExtent.toFixed(3),
-                    surveyNo: row[3] !== undefined ? row[3].toString().trim() : '',
-                    khataNo: khNo
-                };
-            });
-
-            let adgUniqueKhatasSet = new Set();
-            let adgTotalPattadarExtentSum = 0;
-            let adangalMatchedRows = [];
-
+            let adgMatched = [];
             if (isAdangalLoaded) {
-                adangalDataRows.forEach(row => {
-                    let lpNo = (row[1] || '').toString().replace(/[']/g, '').trim();
+                adangalDataRows.forEach(r => {
+                    let lpNo = (r[1] || '').toString().replace(/[']/g, '').trim();
                     if (extractBaseSurvey(lpNo) === baseSurvey) {
-                        let kNo = "";
-                        let extent = parseFloatSafe(adangalFormatType === "standard" ? row[14] : row[13]);
-                        
-                        if (adangalFormatType === "standard") {
-                            kNo = row[12] !== undefined ? row[12].toString().trim() : '';
-                        } else {
-                            kNo = row[10] !== undefined ? row[10].toString().trim() : '';
-                        }
-                        
-                        if (kNo && !kNo.includes("(") && !isNaN(parseFloat(kNo))) {
-                            kNo = parseFloat(kNo).toString();
-                        }
-                        
-                        if (kNo) adgUniqueKhatasSet.add(kNo);
-                        adgTotalPattadarExtentSum += extent;
-
-                        adangalMatchedRows.push({
-                            surveyNo: lpNo,
-                            khataNo: kNo,
-                            extent: extent.toFixed(3)
-                        });
+                        let kNo = (adangalFormatType === "standard" ? r[12] : r[10]) || '';
+                        let extent = parseFloatSafe(adangalFormatType === "standard" ? r[14] : r[13]);
+                        if (kNo && !kNo.includes("(") && !isNaN(parseFloat(kNo))) kNo = parseFloat(kNo).toString();
+                        adgMatched.push({ surveyNo: lpNo, khataNo: kNo, extent: extent.toFixed(3) });
                     }
                 });
             }
 
-            document.getElementById('deltaDrilldownTitle').innerHTML = `
-                Side-by-Side Register Comparison for Survey Section: ${baseSurvey} 
-                <span style="color:#2563eb; font-size:14px; font-weight:normal; margin-left:8px;">
-                    [DLR: ${dlrUniqueKhatasSet.size} Khatas, Subtotal Extent: ${dlrTotalLpmExtentSum.toFixed(3)} Ac] 
-                    [Adangal: ${adgUniqueKhatasSet.size} Khatas, Pattadar Total: ${adgTotalPattadarExtentSum.toFixed(3)} Ac]
-                </span>
-            `;
+            document.getElementById('deltaDrilldownTitle').textContent = `Side-by-Side Comparison for Survey: ${baseSurvey} [DLR: ${dlrMatched.length}, Adangal: ${adgMatched.length}]`;
 
-            let maxLen = Math.max(dlrMatchedRows.length, adangalMatchedRows.length);
+            let maxLen = Math.max(dlrMatched.length, adgMatched.length);
             for (let i = 0; i < maxLen; i++) {
-                let d = dlrMatchedRows[i] || { lpmNo: '', lpmExtent: '', surveyNo: '', khataNo: '' };
-                let a = adangalMatchedRows[i] || { surveyNo: '', khataNo: '', extent: '' };
-
-                tbody.innerHTML += `<tr>
-                    <td style="background-color: #fafbfe; border-right: 1px solid #cbd5e1;"><b>${d.lpmNo}</b></td>
-                    <td style="background-color: #fafbfe; border-right: 1px solid #cbd5e1;">${d.lpmExtent || ''}</td>
-                    <td style="background-color: #fafbfe; border-right: 1px solid #cbd5e1; color:#475569;"><small>${d.surveyNo}</small></td>
-                    <td style="background-color: #fafbfe; border-right: 3px double #cbd5e1; font-weight:500;">${d.khataNo}</td>
-                    <td style="background-color: #fbfdfb; border-right: 1px solid #cbd5e1; color:#475569;"><small>${a.surveyNo}</small></td>
-                    <td style="background-color: #fbfdfb; border-right: 1px solid #cbd5e1; font-weight:500;">${a.khataNo}</td>
-                    <td style="background-color: #fbfdfb; font-weight:bold; color:#0f766e;">${a.extent || ''}</td>
-                </tr>`;
-
-                sideBySideDeltaExportCache.push([
-                    d.lpmNo, d.lpmExtent, d.surveyNo, d.khataNo,
-                    a.surveyNo, a.khataNo, a.extent
-                ]);
+                let d = dlrMatched[i] || { lpmNo: '', lpmExtent: '', surveyNo: '', khataNo: '' };
+                let a = adgMatched[i] || { surveyNo: '', khataNo: '', extent: '' };
+                tbody.innerHTML += `<tr><td><b>${d.lpmNo}</b></td><td>${d.lpmExtent}</td><td><small>${d.surveyNo}</small></td><td style="border-right: 3px double #cbd5e1;">${d.khataNo}</td><td><small>${a.surveyNo}</small></td><td>${a.khataNo}</td><td style="color:#0f766e; font-weight:bold;">${a.extent}</td></tr>`;
+                sideBySideDeltaExportCache.push([d.lpmNo, d.lpmExtent, d.surveyNo, d.khataNo, a.surveyNo, a.khataNo, a.extent]);
             }
 
             document.getElementById('deltaDrilldownSection').style.display = 'block';
@@ -1347,12 +1127,8 @@
         function showSurveyDrilldown(baseSurvey, broadNature, element) {
             document.querySelectorAll('#surveyTable .clickable-row').forEach(r => r.classList.remove('selected-row'));
             element.classList.add('selected-row');
-            currentSurveyRows = globalDataRows.filter(row => {
-                let sStr = row[3];
-                let rNat = (row[8] !== undefined && row[8] !== null) ? row[8].toString().trim() : '';
-                return sStr && extractBaseSurvey(sStr) === baseSurvey && rNat === broadNature;
-            });
-            document.getElementById('surveyDrilldownTitle').textContent = `Individual LPM Records for Survey Block: ${baseSurvey} (${broadNature}) — [${currentSurveyRows.length} items]`;
+            currentSurveyRows = globalDataRows.filter(r => r[3] && extractBaseSurvey(r[3]) === baseSurvey && ((r[8] || '').toString().trim() === broadNature));
+            document.getElementById('surveyDrilldownTitle').textContent = `Records for Survey: ${baseSurvey} (${broadNature}) [${currentSurveyRows.length}]`;
             renderTargetTable('#surveyDrilldownTable', currentSurveyRows);
             document.getElementById('surveyDrilldownSection').style.display = 'block';
             document.getElementById('surveyDrilldownSection').scrollIntoView({ behavior: 'smooth' });
@@ -1361,24 +1137,15 @@
         function showKhataDrilldown(khataNum, adangalRecords, element) {
             document.querySelectorAll('#khataTable .clickable-row').forEach(r => r.classList.remove('selected-row'));
             element.classList.add('selected-row');
-            document.getElementById('khataDrilldownTitle').textContent = `Side-by-Side Asset Map for Khata Holder: Account ${khataNum}`;
+            document.getElementById('khataDrilldownTitle').textContent = `Records for Khata: ${khataNum}`;
             const tbody = document.querySelector('#khataDrilldownTable tbody');
             tbody.innerHTML = '';
-
             let dlrRecords = khataDlrGlobalMap[khataNum] ? khataDlrGlobalMap[khataNum].rawRecords : [];
             let maxLen = Math.max(dlrRecords.length, adangalRecords.length);
-
             for (let i = 0; i < maxLen; i++) {
-                let dlr = dlrRecords[i] || { lpmNo: '', lpmExtent: '', surveyNo: '' };
-                let adg = adangalRecords[i] || { lpNo: '', extent: '' };
-
-                tbody.innerHTML += `<tr>
-                    <td style="background-color: #fafbfe;">${dlr.lpmNo}</td>
-                    <td style="background-color: #fafbfe; font-weight:500;">${dlr.lpmExtent ? parseFloat(dlr.lpmExtent).toFixed(3) : ''}</td>
-                    <td style="background-color: #fafbfe; color:#475569;"><small>${dlr.surveyNo}</small></td>
-                    <td style="background-color: #fbfdfb;">${adg.lpNo}</td>
-                    <td style="background-color: #fbfdfb; font-weight:500;">${adg.extent ? parseFloat(adg.extent).toFixed(3) : ''}</td>
-                </tr>`;
+                let d = dlrRecords[i] || { lpmNo: '', lpmExtent: '', surveyNo: '' };
+                let a = adangalRecords[i] || { lpNo: '', extent: '' };
+                tbody.innerHTML += `<tr><td>${d.lpmNo}</td><td>${d.lpmExtent ? parseFloat(d.lpmExtent).toFixed(3) : ''}</td><td><small>${d.surveyNo}</small></td><td>${a.lpNo}</td><td>${a.extent ? parseFloat(a.extent).toFixed(3) : ''}</td></tr>`;
             }
             document.getElementById('khataDrilldownSection').style.display = 'block';
             document.getElementById('khataDrilldownSection').scrollIntoView({ behavior: 'smooth' });
@@ -1387,11 +1154,8 @@
         function showJointDrilldown(lpmNo, element) {
             document.querySelectorAll('#jointLpmSummaryTable .clickable-row').forEach(r => r.classList.remove('selected-row'));
             element.classList.add('selected-row');
-            currentJointRows = globalDataRows.filter(row => {
-                let checkLpm = (row[1] !== undefined && row[1] !== null) ? row[1].toString().trim() : '';
-                return checkLpm === lpmNo;
-            });
-            document.getElementById('jointDrilldownTitle').textContent = `Cross Holding Record Map for Joint LPM Number: ${lpmNo} (${currentJointRows.length} rows tied)`;
+            currentJointRows = globalDataRows.filter(r => (r[1] || '').toString().trim() === lpmNo);
+            document.getElementById('jointDrilldownTitle').textContent = `Records for Joint LPM: ${lpmNo} (${currentJointRows.length} occurrences)`;
             renderTargetTable('#jointDrilldownTable', currentJointRows);
             document.getElementById('jointDrilldownSection').style.display = 'block';
             document.getElementById('jointDrilldownSection').scrollIntoView({ behavior: 'smooth' });
